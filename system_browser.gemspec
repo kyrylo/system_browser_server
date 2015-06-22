@@ -11,6 +11,10 @@ Gem::Specification.new do |s|
 
   s.require_path = 'lib'
   s.files        = %w[
+    lib/system_browser.rb
+    lib/system_browser/server.rb
+    lib/system_browser/message.rb
+    lib/system_browser/message/add_gem_message.rb
     VERSION
     README.md
     CHANGELOG.md
@@ -19,6 +23,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
 
   s.add_runtime_dependency 'system_navigation', '~> 0'
+  s.add_runtime_dependency 'core_classes', '~> 0'
 
   s.add_development_dependency 'bundler', '~> 1.9'
   s.add_development_dependency 'rake', '~> 10.4'
