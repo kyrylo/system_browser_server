@@ -6,56 +6,30 @@ module SystemBrowser
 
     def initialize(port = 9696)
       @server = TCPServer.new(port)
+      @session = Session.new
     end
 
     def start
       Socket.accept_loop(@server) do |connection|
-        initialize_connection(connection)
-        handle(connection)
+        LOGGER.debug('Accepted a new connection') if $DEBUG_SB
+
+        @session.connection = connection
+        LOGGER.debug('Initialized a new session') if $DEBUG_SB
+
+        self.handle_connection(connection)
       end
     end
 
-    def initialize_connection(connection)
-      send_core(connection)
-      send_gem_list(connection)
-    end
+    protected
 
-    def send_core(connection)
-      #classes = CoreClasses.as_set.map(&:name)
-      Message::AddGemMessage.new(connection).send(['Ruby Core'])
-    end
-
-    def send_gem_list(connection)
-      gems = Gem.loaded_specs.keys
-      Message::AddGemMessage.new(connection).send(gems)
-    end
-
-    def handle(connection)
+    def handle_connection(connection)
       loop do
-        request = connection.gets
-        process(request, connection)
-      end
-    end
+        request = Request.new(connection.gets)
 
-    def process(request, connection)
-      req = request.chop.split
-      data = req[1..-1].join
+        LOGGER.debug('Received a request') if $DEBUG_SB
 
-      case req.first
-      when 'GET_BEHAVIORS'
-        if data == 'RubyCore'
-          behaviors = CoreClasses.as_set.map(&:name)
-          Message::AddBehaviorMessage.new(connection).send(behaviors)
-        else
-          sn = SystemNavigation.default
-          behaviors = sn.all_classes_and_modules_in_gem_named(req.last).map(&:name)
-          Message::AddBehaviorMessage.new(connection).send(behaviors)
-        end
-      when 'GET_METHODS'
-        sn = SystemNavigation.default
-        method_hash = sn.all_methods_in_behavior(eval(data))
-        methods = method_hash.as_array.map(&:name)
-        Message::AddMethodMessage.new(connection).send(methods)
+        @session.process_request(request)
+        @session.process_response
       end
     end
   end
