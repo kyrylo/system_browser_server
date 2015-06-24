@@ -11,12 +11,16 @@ require_relative 'system_browser/request'
 require_relative 'system_browser/response'
 require_relative 'system_browser/resources/gem'
 require_relative 'system_browser/resources/behaviour'
+require_relative 'system_browser/resources/method'
+require_relative 'system_browser/resources/source'
 
 module SystemBrowser
   LOGGER = Logger.new(STDOUT)
 
   def self.start
-    Thread.abort_on_exception = true
+    if $DEBUG_SB
+      Thread.abort_on_exception = true
+    end
 
     th = Thread.new do
       Server.start

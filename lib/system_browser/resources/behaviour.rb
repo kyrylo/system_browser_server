@@ -9,7 +9,7 @@ module SystemBrowser
         @sn = SystemNavigation.default
       end
 
-      def get(gem)
+      def get(gem, other_data = nil)
         if Resources::Gem::CORE == (gem)
           CoreClasses.as_set.map(&:name)
         else

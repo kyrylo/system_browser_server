@@ -1,6 +1,6 @@
 module SystemBrowser
   class AbstractRequest
-    attr_reader :action, :resource, :scope
+    attr_reader :action, :resource, :scope, :other
 
     def initialize(json)
       @data = self.get_data(json)
@@ -8,12 +8,14 @@ module SystemBrowser
       @action = nil
       @resource = nil
       @scope = nil
+      @other = nil
     end
 
     def process
       @action = @data['action']
       @resource = @data['resource']
       @scope = @data['scope']
+      @other = @data['other']
     end
 
     def empty?

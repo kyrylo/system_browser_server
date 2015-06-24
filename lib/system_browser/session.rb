@@ -3,7 +3,12 @@ module SystemBrowser
     def initialize
       @connection = nil
       @request = nil
-      @resources = [Resources::Gem, Resources::Behaviour]
+      @resources = [
+        Resources::Gem,
+        Resources::Behaviour,
+        Resources::Method,
+        Resources::Source
+      ]
     end
 
     def connection=(connection)
@@ -21,7 +26,7 @@ module SystemBrowser
     def process_response
       @resources.each do |resource|
         if resource.name == @request.resource
-          data = resource.new.__send__(@request.action, @request.scope)
+          data = resource.new.__send__(@request.action, @request.scope, @request.other)
 
           response = Response.new(
             action: "add:#{@request.resource}:#{@request.scope}",
@@ -30,25 +35,6 @@ module SystemBrowser
           @connection.puts(response.to_json)
           return
         end
-      end
-    end
-
-    protected
-
-    def process(request, connection)
-      req = request.chop.split
-      data = req[1..-1].join
-
-      case req.first
-      when 'GET_BEHAVIORS'
-
-      when 'GET_METHODS'
-        sn = SystemNavigation.default
-        method_hash = sn.all_methods_in_behavior(eval(data))
-        methods = method_hash.as_array.map(&:name)
-        Message::AddMethodMessage.new(connection).send(methods)
-      else
-        puts "UNKNOWN MESSSAGE!!!! #{req.first}"
       end
     end
   end
