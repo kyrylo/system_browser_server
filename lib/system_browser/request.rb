@@ -1,5 +1,5 @@
 module SystemBrowser
-  class AbstractRequest
+  class Request
     attr_reader :action, :resource, :scope, :other
 
     def initialize(json)
@@ -27,8 +27,5 @@ module SystemBrowser
     def get_data(json)
       JSON.parse(json)['system_browser_server']
     end
-  end
-
-  class Request < AbstractRequest
   end
 end

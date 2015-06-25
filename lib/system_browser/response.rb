@@ -1,5 +1,5 @@
 module SystemBrowser
-  class AbstractResponse
+  class Response
     def initialize(data: nil, action: nil, resource: nil)
       @response = {
         system_browser_client: {
@@ -13,8 +13,5 @@ module SystemBrowser
     def to_json
       JSON.generate(@response) + "\n"
     end
-  end
-
-  class Response < AbstractResponse
   end
 end
