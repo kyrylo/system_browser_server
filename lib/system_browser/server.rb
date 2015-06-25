@@ -11,10 +11,8 @@ module SystemBrowser
 
     def start
       Socket.accept_loop(@server) do |connection|
-        LOGGER.debug('Accepted a new connection') if $DEBUG_SB
-
         @session.connection = connection
-        LOGGER.debug('Initialized a new session') if $DEBUG_SB
+        SLogger.debug('Accepted a new connection')
 
         self.handle_connection(connection)
       end
@@ -26,11 +24,23 @@ module SystemBrowser
       loop do
         request = Request.new(connection.gets)
 
-        LOGGER.debug('Received a request') if $DEBUG_SB
+        SLogger.debug("Received a request")
 
-        @session.process_request(request)
-        @session.process_response
+        self.process_request(request)
+        self.process_response
       end
+    end
+
+    def process_request(request)
+      @session.process_request(request)
+    rescue => e
+      SLogger.error(e.class) { e.to_s }
+    end
+
+    def process_response
+      @session.process_response
+    rescue => e
+      SLogger.error(e.class) { e.to_s }
     end
   end
 end

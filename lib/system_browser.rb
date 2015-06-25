@@ -9,14 +9,13 @@ require_relative 'system_browser/server'
 require_relative 'system_browser/session'
 require_relative 'system_browser/request'
 require_relative 'system_browser/response'
+require_relative 'system_browser/slogger'
 require_relative 'system_browser/resources/gem'
 require_relative 'system_browser/resources/behaviour'
 require_relative 'system_browser/resources/method'
 require_relative 'system_browser/resources/source'
 
 module SystemBrowser
-  LOGGER = Logger.new(STDOUT)
-
   def self.start
     if $DEBUG_SB
       Thread.abort_on_exception = true
@@ -26,7 +25,7 @@ module SystemBrowser
       Server.start
     end
 
-    LOGGER.debug('Started the Socket server') if $DEBUG_SB
+    SLogger.debug('Started the Socket server')
 
     th
   end
