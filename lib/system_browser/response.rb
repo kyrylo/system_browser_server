@@ -17,19 +17,4 @@ module SystemBrowser
 
   class Response < AbstractResponse
   end
-
-  class GemAllResponse < AbstractResponse
-    def initialize(data: nil, action: nil)
-      super(data)
-
-      @response[:data] = [
-        'ruby-core',
-        'ruby-stdlib',
-
-      ]
-      @response[:system_browser_client][:data] = [
-        *GemList.new.serialize
-      ]
-    end
-  end
 end
