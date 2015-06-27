@@ -10,12 +10,15 @@ module SystemBrowser
       end
 
       def get(gem, other_data = nil)
-        if Resources::Gem::CORE == (gem)
-          CoreClasses.as_set.map(&:name)
+        data = if Resources::Gem::CORE == (gem)
+          CoreClasses.as_set
         else
-          @sn.all_classes_and_modules_in_gem_named(gem).map(&:name)
+          @sn.all_classes_and_modules_in_gem_named(gem)
         end
 
+        data.map do |behaviour|
+          {name: behaviour.name}
+        end
       end
     end
   end

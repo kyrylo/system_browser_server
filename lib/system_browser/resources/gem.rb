@@ -11,7 +11,7 @@ module SystemBrowser
 
       def get(*args)
         gems = ::Gem.loaded_specs.map do |gem|
-          gem.first
+          {name: gem.first}
         end
 
         [*DEFAULT_GEMS, *gems]

@@ -12,7 +12,7 @@ module SystemBrowser
       def get(*args)
         hash = args.last
         owner = eval(hash['owner'])
-        method = hash['method']
+        method = hash['method']['name']
 
         if method.start_with?('#')
           unbound_method = owner.instance_method(method[1..-1].to_sym)
