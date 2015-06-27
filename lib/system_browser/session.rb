@@ -27,6 +27,9 @@ module SystemBrowser
       @resources.each do |resource|
         if resource.name == @request.resource
           data = resource.new.__send__(@request.action, @request.scope, @request.other)
+          if data.instance_of?(String)
+            data = self.replace_weird_characters(data)
+          end
 
           response = Response.new(
             action: "add:#{@request.resource}:#{@request.scope}",
@@ -36,6 +39,14 @@ module SystemBrowser
           return
         end
       end
+    end
+
+    protected
+
+    # Temporary hack before we support weird characters for real.
+    def replace_weird_characters(data)
+      data.force_encoding('ASCII-8BIT').
+        encode('UTF-8', undef: :replace, replace: '')
     end
   end
 end

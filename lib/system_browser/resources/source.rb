@@ -17,6 +17,9 @@ module SystemBrowser
         if method.start_with?('#')
           unbound_method = owner.instance_method(method[1..-1].to_sym)
           FastMethodSource.comment_and_source_for(unbound_method)
+        elsif method.start_with?('.')
+          unbound_method = owner.singleton_class.instance_method(method[1..-1].to_sym)
+          FastMethodSource.comment_and_source_for(unbound_method)
         end
       end
     end
