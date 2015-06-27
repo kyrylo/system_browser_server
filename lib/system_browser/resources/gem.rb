@@ -3,7 +3,7 @@ module SystemBrowser
     class Gem
       CORE = 'Ruby Core'
       STDLIB = 'Ruby Stdlib'
-      DEFAULT_GEMS = [CORE, STDLIB]
+      DEFAULT_GEMS = [{name: CORE}, {name: STDLIB}]
 
       def self.name
         'gem'
