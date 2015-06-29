@@ -22,7 +22,13 @@ module SystemBrowser
 
     def handle_connection(connection)
       loop do
-        request = Request.new(connection.gets)
+        readval = connection.gets
+        if readval.nil?
+          SLogger.debug('Connection disconnected')
+          break
+        end
+
+        request = Request.new(readval)
 
         SLogger.debug("Received a request")
 
