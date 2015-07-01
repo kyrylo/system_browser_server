@@ -1,6 +1,7 @@
 require 'socket'
 require 'json'
 require 'logger'
+require 'shellwords'
 
 require 'system_navigation'
 require 'core_classes'
