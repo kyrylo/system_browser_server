@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'system_navigation', '~> 0'
   s.add_runtime_dependency 'core_classes', '~> 0'
+  s.add_runtime_dependency 'coderay', '~> 1.1'
 
   s.add_development_dependency 'bundler', '~> 1.9'
   s.add_development_dependency 'rake', '~> 10.4'

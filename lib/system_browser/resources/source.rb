@@ -24,7 +24,7 @@ module SystemBrowser
           source = FastMethodSource.comment_and_source_for(unbound_method)
         end
 
-        self.unindent(source)
+        CodeRay.scan(self.unindent(source), :ruby).div
       end
 
       protected
