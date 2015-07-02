@@ -17,7 +17,9 @@ module SystemBrowser
         end
 
         data.map do |behaviour|
-          {name: behaviour.name}
+          {name: behaviour.name,
+           isModule: behaviour.instance_of?(Module),
+           isException: behaviour.ancestors.include?(Exception)}
         end
       end
     end
