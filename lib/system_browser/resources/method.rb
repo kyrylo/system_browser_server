@@ -10,7 +10,8 @@ module SystemBrowser
       end
 
       def get(behaviour, other_data = nil)
-        method_hash = @sn.all_methods_in_behavior(eval(behaviour))
+        behaviour_obj = SystemBrowser::Behaviour.from_str(behaviour)
+        method_hash = @sn.all_methods_in_behavior(behaviour_obj)
         method_names_hash(method_hash)
       end
 

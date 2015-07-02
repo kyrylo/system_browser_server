@@ -11,8 +11,9 @@ module SystemBrowser
 
       def get(*args)
         hash = args.last
-        owner = eval(hash['owner'])
+
         method = hash['method']['name']
+        owner = SystemBrowser::Behaviour.from_str(hash['owner'])
 
         source = nil
 
