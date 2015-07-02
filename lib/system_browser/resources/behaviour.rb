@@ -17,9 +17,16 @@ module SystemBrowser
         end
 
         data.map do |behaviour|
+          is_module = behaviour.instance_of?(Module)
+
+          superclass = unless is_module
+                         behaviour.superclass
+                       end
+
           {name: (behaviour.name ? behaviour.name : behaviour.inspect),
-           isModule: behaviour.instance_of?(Module),
-           isException: behaviour.ancestors.include?(Exception)}
+           isModule: is_module,
+           isException: behaviour.ancestors.include?(Exception),
+           superclass: superclass}
         end
       end
     end
