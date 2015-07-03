@@ -12,9 +12,16 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.files        = %w[
     lib/system_browser.rb
+    lib/system_browser/behaviour.rb
+    lib/system_browser/request.rb
     lib/system_browser/server.rb
-    lib/system_browser/message.rb
-    lib/system_browser/message/add_gem_message.rb
+    lib/system_browser/response.rb
+    lib/system_browser/session.rb
+    lib/system_browser/slogger.rb
+    lib/system_browser/resources/behaviour.rb
+    lib/system_browser/resources/method.rb
+    lib/system_browser/resources/gem.rb
+    lib/system_browser/resources/source.rb
     VERSION
     README.md
     CHANGELOG.md
