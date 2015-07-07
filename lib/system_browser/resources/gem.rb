@@ -1,3 +1,4 @@
+# coding: utf-8
 module SystemBrowser
   module Resources
     class Gem
@@ -15,6 +16,14 @@ module SystemBrowser
         end
 
         [*DEFAULT_GEMS, *gems]
+      end
+
+      def description(*args)
+        gem_name = args.first
+
+        gem = ::Gem.loaded_specs[gem_name]
+
+        Gem2Markdown.convert(gem)
       end
 
       def open(*args)

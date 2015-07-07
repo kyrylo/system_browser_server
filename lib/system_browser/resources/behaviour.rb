@@ -11,10 +11,10 @@ module SystemBrowser
 
       def get(gem, other_data = nil)
         data = if Resources::Gem::CORE == (gem)
-          CoreClasses.as_set
-        else
-          @sn.all_classes_and_modules_in_gem_named(gem)
-        end
+                 CoreClasses.as_set
+               else
+                 @sn.all_classes_and_modules_in_gem_named(gem)
+               end
 
         data.map do |behaviour|
           is_module = behaviour.instance_of?(Module)
