@@ -9,7 +9,7 @@ module SystemBrowser
     end
 
     def convert
-      document = ''
+      description = ''
 
       [header,
        summary,
@@ -19,14 +19,16 @@ module SystemBrowser
        email,
        newline,
        description,
-       runtime_deps,
-       newline,
-       development_deps
-      ].each do |doc|
-        document += (doc || '')
+       newline(2)
+      ].each do |desc|
+        description += (desc || '')
        end
 
-      document + newline
+      {
+        description: description,
+        development_deps: development_deps,
+        runtime_deps: runtime_deps
+      }
     end
 
     private
@@ -89,23 +91,17 @@ module SystemBrowser
 
     def runtime_deps
       if @gem.runtime_dependencies.any?
-        title = '## Runtime dependencies'
-        deps = @gem.runtime_dependencies.map do |(name, _ver, _type)|
-          li(name.to_s)
+        @gem.runtime_dependencies.map do |(name, _ver, _type)|
+          name.to_s
         end
-
-        title + newline + deps.join("\n") + newline
       end
     end
 
     def development_deps
       if @gem.development_dependencies.any?
-        title = '## Development dependencies'
-        deps = @gem.development_dependencies.map do |(name, _ver, _type)|
-          li(name.to_s)
+        @gem.development_dependencies.map do |(name, _ver, _type)|
+          name.to_s
         end
-
-        title + newline + deps.join("\n") + newline
       end
     end
 
