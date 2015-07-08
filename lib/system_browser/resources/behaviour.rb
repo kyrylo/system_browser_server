@@ -10,8 +10,11 @@ module SystemBrowser
       end
 
       def get(gem, other_data = nil)
-        data = if Resources::Gem::CORE == (gem)
+        data = case gem
+               when Resources::Gem::CORE
                  CoreClasses.as_set
+               when Resources::Gem::STDLIB
+                 self.stdlib_behaviours
                else
                  @sn.all_classes_and_modules_in_gem_named(gem)
                end
@@ -33,8 +36,10 @@ module SystemBrowser
       def autoget(behaviour, other_data = nil)
         behaviour_obj = SystemBrowser::Behaviour.from_str(behaviour)
 
-        if CoreClasses.as_set.find {|c| c == behaviour_obj }
+        if CoreClasses.as_set.find { |c| c == behaviour_obj }
           {gem: Resources::Gem::CORE}
+        elsif self.stdlib_behaviours.find { |c| c == behaviour_obj }
+          {gem: Resources::Gem::STDLIB}
         else
           gem = ::Gem.loaded_specs.keys.find do |gem_name|
             behaviours = @sn.all_classes_and_modules_in_gem_named(gem_name)
@@ -43,6 +48,17 @@ module SystemBrowser
 
           {gem: gem}
         end
+      end
+
+      protected
+
+      def stdlib_behaviours
+        CoreClasses::Stdlib.as_set.map do |behaviour|
+          begin
+            eval(behaviour)
+          rescue
+          end
+        end.compact
       end
     end
   end
