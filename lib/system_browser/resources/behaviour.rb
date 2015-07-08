@@ -29,6 +29,21 @@ module SystemBrowser
            superclass: superclass}
         end
       end
+
+      def autoget(behaviour, other_data = nil)
+        behaviour_obj = SystemBrowser::Behaviour.from_str(behaviour)
+
+        if CoreClasses.as_set.find {|c| c == behaviour_obj }
+          {gem: Resources::Gem::CORE}
+        else
+          gem = ::Gem.loaded_specs.keys.find do |gem_name|
+            behaviours = @sn.all_classes_and_modules_in_gem_named(gem_name)
+            behaviours.include?(behaviour_obj)
+          end
+
+          {gem: gem}
+        end
+      end
     end
   end
 end

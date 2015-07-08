@@ -20,10 +20,18 @@ module SystemBrowser
 
       def description(*args)
         gem_name = args.first
-
         gem = ::Gem.loaded_specs[gem_name]
 
-        Gem2Markdown.convert(gem)
+        if CORE == gem_name || STDLIB == gem_name
+          SLogger.debug('implement me (gem.rb)')
+          {
+            description: '',
+            development_deps: [],
+            runtime_deps: []
+          }
+        else
+          Gem2Markdown.convert(gem)
+        end
       end
 
       def open(*args)
