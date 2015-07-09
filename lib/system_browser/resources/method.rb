@@ -22,9 +22,12 @@ module SystemBrowser
 
         method_hash.keys.each do |key|
           new_val = method_hash[key].map do |k, values|
-            {k => values.map { |n| n.name.to_s}}
+            {
+              k => values.map do |m|
+               {name: m.name.to_s, c_method: m.source_location.nil? }
+              end
+            }
           end
-
           new_h[key] = new_val.first.merge(new_val.last)
         end
 

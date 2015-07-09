@@ -12,7 +12,7 @@ module SystemBrowser
       def get(*args)
         hash = args.last
 
-        method = hash['method']['name']
+        method = hash['method']['displayName']
         owner = SystemBrowser::Behaviour.from_str(hash['owner'])
 
         source = nil
