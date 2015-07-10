@@ -50,6 +50,7 @@ module SystemBrowser
           response = Response.new(
             action: "#{action}:#{@request.resource}:#{scope}",
             data: data)
+          response.set_callback_id(@request.callback_id)
 
           @connection.puts(response.to_json)
           return

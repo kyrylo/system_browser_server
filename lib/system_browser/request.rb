@@ -1,9 +1,10 @@
 module SystemBrowser
   class Request
-    attr_reader :action, :resource, :scope, :other
+    attr_reader :action, :resource, :scope, :other, :callback_id
 
     def initialize(json)
-      @data = self.get_data(json)
+      @req = self.get_data(json)
+      @data = @req['system_browser_server']
 
       @action = nil
       @resource = nil
@@ -12,6 +13,8 @@ module SystemBrowser
     end
 
     def process
+      @callback_id = @req['callbackId']
+
       @action = @data['action']
       @resource = @data['resource']
       @scope = @data['scope']
@@ -25,7 +28,7 @@ module SystemBrowser
     protected
 
     def get_data(json)
-      JSON.parse(json)['system_browser_server']
+      JSON.parse(json)
     end
   end
 end
