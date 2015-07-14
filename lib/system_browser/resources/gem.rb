@@ -50,7 +50,7 @@ DESC
           }
         else
           gemdata = Gem2Markdown.convert(gem)
-          behs = Resources::Behaviour.new.get(gem.name).map { |p| eval(p[:name]) }
+          behs = Resources::Behaviour.all_from(gem.name)
           gemdata[:behaviours] = count_behaviours(behs)
           gemdata
         end

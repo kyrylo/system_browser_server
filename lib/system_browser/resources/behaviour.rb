@@ -1,6 +1,8 @@
 module SystemBrowser
   module Resources
     class Behaviour
+      CACHED_BEHAVIOURS = {}
+
       def self.name
         'behaviour'
       end
@@ -14,6 +16,14 @@ module SystemBrowser
         end.compact
       end
 
+      def self.all_from(gem)
+        if CACHED_BEHAVIOURS.has_key?(gem)
+          CACHED_BEHAVIOURS[gem]
+        else
+          CACHED_BEHAVIOURS[gem] = SystemNavigation.new.all_classes_and_modules_in_gem_named(gem)
+        end
+      end
+
       def initialize
         @sn = SystemNavigation.default
       end
@@ -25,7 +35,7 @@ module SystemBrowser
                when Resources::Gem::STDLIB
                  self.class.stdlib_behaviours
                else
-                 @sn.all_classes_and_modules_in_gem_named(gem)
+                 self.class.all_from(gem)
                end
 
         data.map do |behaviour|
