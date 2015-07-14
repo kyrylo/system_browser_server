@@ -27,7 +27,7 @@ module SystemBrowser
           desc = <<DESC
 Ruby Core-#{RUBY_VERSION}
 ===
-The Ruby Standard Library is a vast collection of classes and modules that you can require in your code for additional features.
+The Ruby Core defines common Ruby behaviours available to every program.
 DESC
 
           {
@@ -37,8 +37,13 @@ DESC
             runtime_deps: [],
           }
         when STDLIB
+          desc = <<DESC
+Ruby Standard Library-#{RUBY_VERSION}
+===
+The Ruby Standard Library is a vast collection of classes and modules that you can require in your code for additional features. System Browser shows only those behaviours that were required by this Ruby process.
+DESC
           {
-            description: "# Ruby Standard Library-#{RUBY_VERSION}",
+            description: desc,
             behaviours: self.count_behaviours(Resources::Behaviour.stdlib_behaviours),
             development_deps: [],
             runtime_deps: []
