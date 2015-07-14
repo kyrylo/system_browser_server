@@ -22,15 +22,32 @@ module SystemBrowser
         gem_name = args.first
         gem = ::Gem.loaded_specs[gem_name]
 
-        if CORE == gem_name || STDLIB == gem_name
-          SLogger.debug('implement me (gem.rb)')
+        case gem_name
+        when CORE
+          desc = <<DESC
+Ruby Core-#{RUBY_VERSION}
+===
+The Ruby Standard Library is a vast collection of classes and modules that you can require in your code for additional features.
+DESC
+
           {
-            description: '',
+            description: desc,
+            behaviours: self.count_behaviours(CoreClasses.as_set),
+            development_deps: [],
+            runtime_deps: [],
+          }
+        when STDLIB
+          {
+            description: "# Ruby Standard Library-#{RUBY_VERSION}",
+            behaviours: self.count_behaviours(Resources::Behaviour.stdlib_behaviours),
             development_deps: [],
             runtime_deps: []
           }
         else
-          Gem2Markdown.convert(gem)
+          gemdata = Gem2Markdown.convert(gem)
+          behs = Resources::Behaviour.new.get(gem.name).map { |p| eval(p[:name]) }
+          gemdata[:behaviours] = count_behaviours(behs)
+          gemdata
         end
       end
 
@@ -44,6 +61,24 @@ module SystemBrowser
         system(*command)
 
         :ok
+      end
+
+      protected
+
+      def count_behaviours(collection)
+        behaviours = {}
+
+        grouped = collection.group_by(&:class)
+
+        exceptions = (grouped[Class] || []).group_by do |beh|
+          beh.ancestors.include?(Exception)
+        end
+
+        behaviours['modules'] = (grouped[Module] || []).count
+        behaviours['classes'] = (exceptions[false] || []).count
+        behaviours['exceptions'] = (exceptions[true] || []).count
+
+        behaviours
       end
     end
   end

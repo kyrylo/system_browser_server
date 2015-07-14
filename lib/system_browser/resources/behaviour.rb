@@ -5,6 +5,15 @@ module SystemBrowser
         'behaviour'
       end
 
+      def self.stdlib_behaviours
+        CoreClasses::Stdlib.as_set.map do |behaviour|
+          begin
+            eval(behaviour)
+          rescue
+          end
+        end.compact
+      end
+
       def initialize
         @sn = SystemNavigation.default
       end
@@ -14,7 +23,7 @@ module SystemBrowser
                when Resources::Gem::CORE
                  CoreClasses.as_set
                when Resources::Gem::STDLIB
-                 self.stdlib_behaviours
+                 self.class.stdlib_behaviours
                else
                  @sn.all_classes_and_modules_in_gem_named(gem)
                end
@@ -38,7 +47,7 @@ module SystemBrowser
 
         if CoreClasses.as_set.find { |c| c == behaviour_obj }
           {gem: Resources::Gem::CORE}
-        elsif self.stdlib_behaviours.find { |c| c == behaviour_obj }
+        elsif self.class.stdlib_behaviours.find { |c| c == behaviour_obj }
           {gem: Resources::Gem::STDLIB}
         else
           behaviours = @sn.all_classes_and_modules_in_gem_named(gem_name)
@@ -53,17 +62,6 @@ module SystemBrowser
 
           {gem: gem}
         end
-      end
-
-      protected
-
-      def stdlib_behaviours
-        CoreClasses::Stdlib.as_set.map do |behaviour|
-          begin
-            eval(behaviour)
-          rescue
-          end
-        end.compact
       end
     end
   end
