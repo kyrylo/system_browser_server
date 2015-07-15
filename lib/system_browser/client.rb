@@ -3,7 +3,9 @@ module SystemBrowser
     EXECUTABLE = 'system_browser'
 
     def self.start
-      system(EXECUTABLE)
+      pid = spawn(EXECUTABLE)
+      Process.wait(pid)
+      pid
     end
   end
 end

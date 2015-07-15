@@ -2,7 +2,7 @@ module SystemBrowser
   class Server
     def self.start(port = 9696)
       SLogger.debug("Socket server started on port #{port}")
-      self.new.start(port)
+      self.new(port).start
     end
 
     def initialize(port)

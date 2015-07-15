@@ -33,8 +33,10 @@ module SystemBrowser
       end
     end
 
-    client_pid = Client.start
+    client_thread = Thread.new do
+      Client.start
+    end
 
-    [server_thread, client_pid]
+    [server_thread, client_thread]
   end
 end
