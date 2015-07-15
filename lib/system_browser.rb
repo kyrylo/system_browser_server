@@ -2,11 +2,13 @@ require 'socket'
 require 'json'
 require 'logger'
 require 'shellwords'
+require 'thread'
 
 require 'system_navigation'
 require 'core_classes'
 
 require_relative 'system_browser/server'
+require_relative 'system_browser/client'
 require_relative 'system_browser/session'
 require_relative 'system_browser/request'
 require_relative 'system_browser/response'
@@ -24,12 +26,15 @@ module SystemBrowser
       Thread.abort_on_exception = true
     end
 
-    th = Thread.new do
-      Server.start
+    server_thread = Thread.new do
+      begin
+        Server.start
+      rescue IOError
+      end
     end
 
-    SLogger.debug('Started the Socket server')
+    client_pid = Client.start
 
-    th
+    [server_thread, client_pid]
   end
 end

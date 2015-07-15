@@ -1,10 +1,11 @@
 module SystemBrowser
   class Server
-    def self.start
-      self.new.start
+    def self.start(port = 9696)
+      SLogger.debug("Socket server started on port #{port}")
+      self.new.start(port)
     end
 
-    def initialize(port = 9696)
+    def initialize(port)
       @server = TCPServer.new(port)
       @session = Session.new
     end
@@ -25,6 +26,7 @@ module SystemBrowser
         readval = connection.gets
         if readval.nil?
           SLogger.debug('Connection disconnected')
+          @server.close
           break
         end
 
