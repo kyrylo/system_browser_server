@@ -1,4 +1,3 @@
-# coding: utf-8
 module SystemBrowser
   module Resources
     class Gem
