@@ -2,7 +2,6 @@ require 'socket'
 require 'json'
 require 'logger'
 require 'shellwords'
-require 'thread'
 
 require 'system_navigation'
 require 'core_classes'
