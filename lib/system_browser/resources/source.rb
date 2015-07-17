@@ -15,15 +15,13 @@ module SystemBrowser
         method = hash['method']['displayName']
         owner = SystemBrowser::Behaviour.from_str(hash['owner'])
 
-        source = nil
-
-        if method.start_with?('#')
-          unbound_method = owner.instance_method(method[1..-1].to_sym)
-          source = FastMethodSource.comment_and_source_for(unbound_method)
-        elsif method.start_with?('.')
-          unbound_method = owner.singleton_class.instance_method(method[1..-1].to_sym)
-          source = FastMethodSource.comment_and_source_for(unbound_method)
-        end
+        source = if method.start_with?('#')
+                   unbound_method = owner.instance_method(method[1..-1].to_sym)
+                   FastMethodSource.comment_and_source_for(unbound_method)
+                 elsif method.start_with?('.')
+                   unbound_method = owner.singleton_class.instance_method(method[1..-1].to_sym)
+                   FastMethodSource.comment_and_source_for(unbound_method)
+                 end
 
         CodeRay.scan(self.unindent(source), :ruby).div
       end
