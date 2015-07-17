@@ -5,6 +5,7 @@ require 'shellwords'
 
 require 'system_navigation'
 require 'core_classes'
+require 'coderay'
 
 require_relative 'system_browser/server'
 require_relative 'system_browser/client'
