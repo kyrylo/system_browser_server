@@ -1,12 +1,21 @@
 module SystemBrowser
   class Server
+    @@running = false
+
     def self.start(port = 9696)
       SLogger.debug("Socket server started on port #{port}")
       self.new(port).start
     end
 
     def initialize(port)
-      @server = TCPServer.new(port)
+      return if @@running
+
+      begin
+        @server = TCPServer.new(port)
+      rescue Errno::EADDRINUSE
+        port += 1
+        retry
+      end
       @session = Session.new
     end
 
