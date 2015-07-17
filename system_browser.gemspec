@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
     lib/system_browser/behaviour.rb
     lib/system_browser/request.rb
     lib/system_browser/server.rb
+    lib/system_browser/client.rb
     lib/system_browser/response.rb
     lib/system_browser/session.rb
     lib/system_browser/slogger.rb
