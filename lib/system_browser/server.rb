@@ -51,13 +51,13 @@ module SystemBrowser
     def process_request(request)
       @session.process_request(request)
     rescue => e
-      SLogger.error(e.class) { e.to_s }
+      SLogger.log_error(e)
     end
 
     def process_response
       @session.process_response
     rescue => e
-      SLogger.error(e.class) { e.to_s }
+      SLogger.log_error(e)
     end
   end
 end
