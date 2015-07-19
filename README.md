@@ -6,6 +6,8 @@ System Browser
 Description
 -----------
 
+System Browser is a gem that serves as a bridge between a Ruby process and
+[System Browser Client](
 
 Installation
 ------------
