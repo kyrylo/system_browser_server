@@ -1,10 +1,6 @@
 module SystemBrowser
   module Services
     class SourceService < AbstractService
-      def self.name
-        'source'
-      end
-
       def get
         method = @other['method']['displayName']
         owner = SystemBrowser::Behaviour.from_str(@other['owner'])

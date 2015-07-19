@@ -60,8 +60,8 @@ module SystemBrowser
       end
     end
 
-    def find_service_for(req_resource)
-      @services.find { |resource| resource.name == req_resource }
+    def find_service_for(req_service)
+      @services.find { |service| service.service_name == req_service }
     end
 
     ##

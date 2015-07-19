@@ -3,10 +3,6 @@ module SystemBrowser
     class BehaviourService < AbstractService
       CACHED_BEHAVIOURS = {}
 
-      def self.name
-        'behaviour'
-      end
-
       def self.stdlib_behaviours
         CoreClasses::Stdlib.as_set.map do |behaviour|
           begin

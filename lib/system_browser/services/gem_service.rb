@@ -5,10 +5,6 @@ module SystemBrowser
       STDLIB_LABEL = 'Ruby Stdlib'
       DEFAULT_GEMS = [{name: CORE_LABEL}, {name: STDLIB_LABEL}]
 
-      def self.name
-        'gem'
-      end
-
       def get(*args)
         gems = ::Gem.loaded_specs.map do |gem|
           {name: gem.first}
