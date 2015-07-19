@@ -1,12 +1,8 @@
 module SystemBrowser
-  module Resources
-    class Source
+  module Services
+    class SourceService < AbstractService
       def self.name
         'source'
-      end
-
-      def initialize
-        @sn = SystemNavigation.default
       end
 
       def get(*args)

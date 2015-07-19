@@ -16,10 +16,11 @@ require_relative 'system_browser/response'
 require_relative 'system_browser/slogger'
 require_relative 'system_browser/behaviour'
 require_relative 'system_browser/gem2markdown'
-require_relative 'system_browser/resources/gem'
-require_relative 'system_browser/resources/behaviour'
-require_relative 'system_browser/resources/method'
-require_relative 'system_browser/resources/source'
+require_relative 'system_browser/services/abstract_service'
+require_relative 'system_browser/services/gem_service'
+require_relative 'system_browser/services/behaviour_service'
+require_relative 'system_browser/services/method_service'
+require_relative 'system_browser/services/source_service'
 
 module SystemBrowser
   ##

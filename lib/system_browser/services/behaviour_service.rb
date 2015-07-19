@@ -1,6 +1,6 @@
 module SystemBrowser
-  module Resources
-    class Behaviour
+  module Services
+    class BehaviourService < AbstractService
       CACHED_BEHAVIOURS = {}
 
       def self.name

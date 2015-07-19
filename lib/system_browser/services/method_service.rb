@@ -1,6 +1,6 @@
 module SystemBrowser
-  module Resources
-    class Method
+  module Services
+    class MethodService
       def self.name
         'method'
       end

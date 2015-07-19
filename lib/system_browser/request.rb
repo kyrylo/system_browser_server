@@ -14,9 +14,11 @@ module SystemBrowser
 
     def parse
       @callback_id = @req['callbackId']
+
       @action = @data['action']
       @resource = @data['resource']
       @scope = @data['scope']
+
       @other = @data['other']
     end
 

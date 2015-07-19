@@ -21,10 +21,11 @@ Gem::Specification.new do |s|
     lib/system_browser/session.rb
     lib/system_browser/slogger.rb
     lib/system_browser/gem2markdown.rb
-    lib/system_browser/resources/behaviour.rb
-    lib/system_browser/resources/method.rb
-    lib/system_browser/resources/gem.rb
-    lib/system_browser/resources/source.rb
+    lib/system_browser/services/behaviour_service.rb
+    lib/system_browser/services/method_service.rb
+    lib/system_browser/services/gem_service.rb
+    lib/system_browser/services/source_service.rb
+    lib/system_browser/services/abstract_service.rb
     VERSION
     README.md
     CHANGELOG.md

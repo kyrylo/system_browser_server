@@ -1,13 +1,18 @@
 module SystemBrowser
   class RequestProcessor
+    ACTIONS = {
+      'get' => 'add',
+      'autoget' => 'autoadd'
+    }.tap { |h| h.default = 'add' }
+
     def initialize(request:, session:)
       @request = request
       @session = session
-      @resources = [
-        Resources::Gem,
-        Resources::Behaviour,
-        Resources::Method,
-        Resources::Source
+      @services = [
+        Services::GemService,
+        Services::BehaviourService,
+        Services::MethodService,
+        Services::SourceService
       ]
     end
 
@@ -17,31 +22,29 @@ module SystemBrowser
       if @request.sets_client_pid?
         @session.set_client_pid(@request.client_pid)
       else
-        resource = self.find_server_resource_for(@request.resource).new
-        data = resource.__send__(@request.action, @request.scope, @request.other)
-        data = self.replace_weird_characters(data) if data.instance_of?(String)
-
-        action = self.process_action
-        scope = self.process_scope(action)
-
-        if scope.empty?
-          data[:behaviour] = @request.scope
-        end
-
-        action_str = "#{action}:#{@request.resource}:#{scope}"
-        response = Response.new(action: action_str, data: data)
-        response.set_callback_id(@request.callback_id)
-
-        @session.send(response)
+        self.process_services
       end
     end
 
     protected
 
-    ACTIONS = {
-      'get' => 'add',
-      'autoget' => 'autoadd'
-    }.tap { |h| h.default = 'add' }
+    def process_services
+      service = self.find_service_for(@request.resource).new()
+
+      data = service.__send__(@request.action, @request.scope, @request.other)
+      data = self.replace_weird_characters(data) if data.instance_of?(String)
+
+      action = self.process_action
+      scope = self.process_scope(action)
+
+      data[:behaviour] = @request.scope if scope.empty?
+
+      action_str = "#{action}:#{@request.resource}:#{scope}"
+      response = Response.new(action: action_str, data: data)
+      response.set_callback_id(@request.callback_id)
+
+      @session.send(response)
+    end
 
     def process_action
       ACTIONS[@request.action]
@@ -55,8 +58,8 @@ module SystemBrowser
       end
     end
 
-    def find_server_resource_for(req_resource)
-      @resources.find { |resource| resource.name == req_resource }
+    def find_service_for(req_resource)
+      @services.find { |resource| resource.name == req_resource }
     end
 
     ##

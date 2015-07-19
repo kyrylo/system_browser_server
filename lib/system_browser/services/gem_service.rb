@@ -1,6 +1,6 @@
 module SystemBrowser
-  module Resources
-    class Gem
+  module Services
+    class GemService
       CORE = 'Ruby Core'
       STDLIB = 'Ruby Stdlib'
       DEFAULT_GEMS = [{name: CORE}, {name: STDLIB}]
