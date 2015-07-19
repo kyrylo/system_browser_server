@@ -1,17 +1,13 @@
 module SystemBrowser
   module Services
-    class MethodService
+    class MethodService < AbstractService
       def self.name
         'method'
       end
 
-      def initialize
-        @sn = SystemNavigation.default
-      end
-
-      def get(behaviour, other_data = nil)
-        behaviour_obj = SystemBrowser::Behaviour.from_str(behaviour)
-        method_hash = @sn.all_methods_in_behavior(behaviour_obj)
+      def get
+        behaviour = SystemBrowser::Behaviour.from_str(@data)
+        method_hash = @sn.all_methods_in_behavior(behaviour)
         method_names_hash(method_hash)
       end
 

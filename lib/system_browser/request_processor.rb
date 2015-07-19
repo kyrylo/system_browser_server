@@ -29,9 +29,11 @@ module SystemBrowser
     protected
 
     def process_services
-      service = self.find_service_for(@request.resource).new()
+      service = self.find_service_for(@request.resource).new(
+        data: @request.scope,
+        other: @request.other)
 
-      data = service.__send__(@request.action, @request.scope, @request.other)
+      data = service.__send__(@request.action)
       data = self.replace_weird_characters(data) if data.instance_of?(String)
 
       action = self.process_action

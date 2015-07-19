@@ -1,9 +1,9 @@
 module SystemBrowser
   module Services
-    class GemService
-      CORE = 'Ruby Core'
-      STDLIB = 'Ruby Stdlib'
-      DEFAULT_GEMS = [{name: CORE}, {name: STDLIB}]
+    class GemService < AbstractService
+      CORE_LABEL = 'Ruby Core'
+      STDLIB_LABEL = 'Ruby Stdlib'
+      DEFAULT_GEMS = [{name: CORE_LABEL}, {name: STDLIB_LABEL}]
 
       def self.name
         'gem'
@@ -18,11 +18,10 @@ module SystemBrowser
       end
 
       def description(*args)
-        gem_name = args.first
-        gem = ::Gem.loaded_specs[gem_name]
+        gem = ::Gem.loaded_specs[@data]
 
-        case gem_name
-        when CORE
+        case @data
+        when CORE_LABEL
           desc = <<DESC
 Ruby Core-#{RUBY_VERSION}
 ===
@@ -35,7 +34,7 @@ DESC
             development_deps: [],
             runtime_deps: [],
           }
-        when STDLIB
+        when STDLIB_LABEL
           desc = <<DESC
 Ruby Standard Library-#{RUBY_VERSION}
 ===
@@ -43,22 +42,21 @@ The Ruby Standard Library is a vast collection of classes and modules that you c
 DESC
           {
             description: desc,
-            behaviours: self.count_behaviours(Resources::Behaviour.stdlib_behaviours),
+            behaviours: self.count_behaviours(BehaviourService.stdlib_behaviours),
             development_deps: [],
             runtime_deps: []
           }
         else
           gemdata = Gem2Markdown.convert(gem)
-          behs = Resources::Behaviour.all_from(gem.name)
+          behs = BehaviourService.all_from(gem.name)
           gemdata[:behaviours] = count_behaviours(behs)
           gemdata
         end
       end
 
-      def open(*args)
-        gem_name = args.first
+      def open
         editor = [ENV['VISUAL'], ENV['EDITOR']].find{|e| !e.nil? && !e.empty? }
-        path = ::Gem.loaded_specs[gem_name].full_gem_path
+        path = ::Gem.loaded_specs[@data].full_gem_path
 
         command = [*Shellwords.split(editor), path]
 

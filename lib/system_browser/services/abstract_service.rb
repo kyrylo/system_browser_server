@@ -1,8 +1,10 @@
 module SystemBrowser
   module Services
     class AbstractService
-      def initialize
+      def initialize(data:, other: nil)
         @sn = SystemNavigation.default
+        @data = data
+        @other = other
       end
 
       def name

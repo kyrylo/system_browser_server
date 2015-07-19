@@ -5,11 +5,9 @@ module SystemBrowser
         'source'
       end
 
-      def get(*args)
-        hash = args.last
-
-        method = hash['method']['displayName']
-        owner = SystemBrowser::Behaviour.from_str(hash['owner'])
+      def get
+        method = @other['method']['displayName']
+        owner = SystemBrowser::Behaviour.from_str(@other['owner'])
 
         source = if method.start_with?('#')
                    unbound_method = owner.instance_method(method[1..-1].to_sym)
