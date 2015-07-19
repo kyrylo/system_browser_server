@@ -1,69 +1,65 @@
 module SystemBrowser
+  ##
+  # This class glues {SystemBrowser::Server} and {SystemBrowser::Client}
+  # providing the support for interaction between them.
   class Session
-    def initialize
-      @connection = nil
-      @request = nil
-      @resources = [
-        Resources::Gem,
-        Resources::Behaviour,
-        Resources::Method,
-        Resources::Source
-      ]
+    ##
+    # Initialises a new session.
+    def self.init
+      self.new(Server.new, Client.new).init
     end
 
+    # @return [TCPSocket] the connection between the server and the client
+    attr_reader :connection
+
+    def initialize(server, client)
+      @server = server
+      @client = client
+      [@server, @client].each { |o| o.session = self }
+    end
+
+    ##
+    # Runs {SystemBrowser::Server} in background. Invokes {SystemBrowser::Client}
+    # and suspends the calling thread for the duration of the client.
+    # @return [void]
+    def init
+      Thread.new { @server.start }
+      Thread.new { @client.start }.join
+
+      true
+    end
+
+    ##
+    # Sets the client's window pid (real pid).
+    def set_client_pid(pid)
+      @client.window_pid = pid
+    end
+
+    ##
+    # Sends a response to the client.
+    #
+    # @param response [SystemBrowser::Response] the data to be sent to the client
+    # @return [void]
+    def send(response)
+      self.connection.puts(response.to_json)
+    end
+
+    ##
+    # @param connection [TCPSocket] the connection between the server and the
+    # client
+    # @return [void]
     def connection=(connection)
-      resp = Response.new(action: 'init')
-      connection.puts(resp.to_json)
-
       @connection = connection
-    end
-
-    def process_request(request)
-      request.process
-      @request = request
-    end
-
-    def process_response
-      @resources.each do |resource|
-        if resource.name == @request.resource
-          data = resource.new.__send__(@request.action, @request.scope, @request.other)
-          if data.instance_of?(String)
-            data = self.replace_weird_characters(data)
-          end
-
-          action = case @request.action
-                   when 'get' then 'add'
-                   when 'autoget'then 'autoadd'
-                   else 'add'
-                   end
-
-          scope = case action
-                  when 'add' then @request.scope
-                  when 'autoadd' then ''
-                  else @request.scope
-                  end
-
-          if scope.empty?
-            data[:behaviour] = @request.scope
-          end
-
-          response = Response.new(
-            action: "#{action}:#{@request.resource}:#{scope}",
-            data: data)
-          response.set_callback_id(@request.callback_id)
-
-          @connection.puts(response.to_json)
-          return
-        end
-      end
+      self.initialize_connection
     end
 
     protected
 
-    # Temporary hack before we support weird characters for real.
-    def replace_weird_characters(data)
-      data.force_encoding('ASCII-8BIT').
-        encode('UTF-8', undef: :replace, replace: '')
+    ##
+    # This method bootstraps the connection between the server and the client.
+    # @return [void]
+    def initialize_connection
+      self.send(Response.new(action: 'init'))
     end
   end
 end

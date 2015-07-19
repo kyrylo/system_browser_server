@@ -12,17 +12,20 @@ module SystemBrowser
       @other = nil
     end
 
-    def process
+    def parse
       @callback_id = @req['callbackId']
-
       @action = @data['action']
       @resource = @data['resource']
       @scope = @data['scope']
       @other = @data['other']
     end
 
-    def empty?
-      @empty
+    def sets_client_pid?
+      @action == Client::PID_COMMAND
+    end
+
+    def client_pid
+      @resource
     end
 
     protected

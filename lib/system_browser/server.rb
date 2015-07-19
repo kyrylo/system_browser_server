@@ -1,61 +1,65 @@
 module SystemBrowser
   class Server
-    @@running = false
+    ##
+    # @return [SystemBrowser::Session]
+    attr_accessor :session
 
-    def self.start(port = 9696)
-      SLogger.debug("Socket server started on port #{port}")
-      self.new(port).start
+    def initialize(port = 9696)
+      self.create_tcpserver(port)
     end
 
-    def initialize(port)
-      return if @@running
-
-      begin
-        @server = TCPServer.new(port)
-      rescue Errno::EADDRINUSE
-        port += 1
-        retry
-      end
-      @session = Session.new
-    end
-
+    ##
+    # Starts the TCP server.
+    #
+    # @note This method blocks the thread.
     def start
-      Socket.accept_loop(@server) do |connection|
-        @session.connection = connection
-        SLogger.debug('Accepted a new connection')
+      Socket.accept_loop(@tcpserver) do |connection|
+        SLogger.debug("[server] accepted a new connection (#{connection})")
 
+        self.session.connection = connection
         self.handle_connection(connection)
       end
     end
 
     protected
 
+    ##
+    # Creates a new TCP server and tries to find a free port.
+    # @return [void]
+    def create_tcpserver(port)
+      @tcpserver = TCPServer.new(port)
+    rescue Errno::EADDRINUSE
+      SLogger.debug("[server] port #{port} is occupied. Trying port #{port + 1}")
+
+      port += 1
+      retry
+    end
+
+    ##
+    # Handles incoming connections.
+    #
+    # @param connection [TCPSocket]
+    # @return [void]
     def handle_connection(connection)
       loop do
-        readval = connection.gets
-        if readval.nil?
-          SLogger.debug('Connection disconnected')
-          @server.close
+        unless readval = connection.gets
+          SLogger.debug("[server] connection #{connection} interrupted. Shutting down...")
+
+          @tcpserver.close
           break
         end
 
-        request = Request.new(readval)
+        SLogger.debug("[server] received a request")
 
-        SLogger.debug("Received a request")
-
-        self.process_request(request)
-        self.process_response
+        self.process_request(Request.new(readval))
       end
     end
 
+    ##
+    # @param request [SystemBrowser::Request]
+    # @return [void]
     def process_request(request)
-      @session.process_request(request)
-    rescue => e
-      SLogger.log_error(e)
-    end
-
-    def process_response
-      @session.process_response
+      RequestProcessor.new(request: request, session: self.session).process
     rescue => e
       SLogger.log_error(e)
     end
