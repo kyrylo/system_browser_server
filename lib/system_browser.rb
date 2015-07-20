@@ -32,17 +32,17 @@ module SystemBrowser
   # @param nonblock [Boolean] If true, then creates a new thread. Otherwise
   #   runs in the current thread
   # @return [Session.init]
-  def self.start(debug: false, nonblock: false)
+  def self.start(debug: false, block: true)
     $DEBUG_SB = debug
 
     if $DEBUG_SB
       Thread.abort_on_exception = true
     end
 
-    if nonblock
-      Thread.new { Session.init }
-    else
+    if block
       Session.init
+    else
+      Thread.new { Session.init }
     end
   end
 end
