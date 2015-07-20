@@ -8,8 +8,9 @@ Description
 -----------
 
 System Browser is a Ruby gem that serves as a bridge between a Ruby process
-and the [System Browser Client][client]. It allows you to browse Ruby behaviours
-(classes and modules), its methods and the methods' source code.
+and the [System Browser Client][client]. It allows you to browse Ruby
+behaviours (classes and modules), its methods and the methods' source code.
+_Make sure that you have the client installed_.
 
 Examples
 --------
