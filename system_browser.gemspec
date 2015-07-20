@@ -2,8 +2,8 @@ Gem::Specification.new do |s|
   s.name         = 'system_browser'
   s.version      = File.read('VERSION')
   s.date         = Time.now.strftime('%Y-%m-%d')
-  s.summary      = ''
-  s.description  = ''
+  s.summary      = 'Powers System Browser Client'
+  s.description  = 'Powers System Browser Client, which is a desktop application that displays information about Ruby classes and modules, showing both methods and their source code.'
   s.author       = 'Kyrylo Silin'
   s.email        = 'silin@kyrylo.org'
   s.homepage     = 'https://github.com/kyrylo/system_browser'
