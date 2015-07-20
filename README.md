@@ -15,6 +15,10 @@ _Make sure that you have the client installed_.
 Examples
 --------
 
+The easiest way to play with System Browser is to start it from a REPL such as
+[Pry](http://pryrepl.org/) or [IRB](https://github.com/ruby/ruby/blob/8754f619
+d51a67fc4df255c189c8ff744433dd6e/lib/irb.rb).
+
 ### Basic example
 
 ```ruby
