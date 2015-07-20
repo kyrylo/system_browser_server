@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
     lib/system_browser/session.rb
     lib/system_browser/slogger.rb
     lib/system_browser/gem2markdown.rb
+    lib/system_browser/helpers/gem_service_helper
+    lib/system_browser/helpers/behaviour_service_helper
     lib/system_browser/services/behaviour_service.rb
     lib/system_browser/services/method_service.rb
     lib/system_browser/services/gem_service.rb

@@ -3,15 +3,6 @@ module SystemBrowser
     class BehaviourService < AbstractService
       CACHED_BEHAVIOURS = {}
 
-      def self.stdlib_behaviours
-        CoreClasses::Stdlib.as_set.map do |behaviour|
-          begin
-            eval(behaviour)
-          rescue
-          end
-        end.compact
-      end
-
       def self.all_from(gem)
         if CACHED_BEHAVIOURS.has_key?(gem)
           CACHED_BEHAVIOURS[gem]
@@ -40,7 +31,7 @@ module SystemBrowser
 
         if CoreClasses.as_set.find { |c| c == behaviour }
           {gem: GemService::CORE_LABEL}
-        elsif self.class.stdlib_behaviours.find { |c| c == behaviour }
+        elsif self.stdlib_behaviours.find { |c| c == behaviour }
           {gem: GemService::STDLIB_LABEL}
         else
           behaviours = @sn.all_classes_and_modules_in_gem_named(@other)
@@ -59,12 +50,15 @@ module SystemBrowser
 
       protected
 
+      include SystemBrowser::Helpers::GemServiceHelper
+      include SystemBrowser::Helpers::BehaviourServiceHelper
+
       def behaviours
         case @data
         when GemService::CORE_LABEL
           CoreClasses.as_set
         when GemService::STDLIB_LABEL
-          self.class.stdlib_behaviours
+          self.stdlib_behaviours
         else
           self.class.all_from(@data)
         end

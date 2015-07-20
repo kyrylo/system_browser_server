@@ -60,6 +60,8 @@ DESC
 
       protected
 
+      include SystemBrowser::Helpers::GemServiceHelper
+
       def count_behaviours(collection)
         behaviours = {}
 
