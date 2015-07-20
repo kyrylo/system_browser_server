@@ -1,6 +1,10 @@
 System Browser
 ==============
 
+### v0.1.3 (July 20, 2015)
+
+* Fixed stdlib meta information
+
 ### v0.1.2 (July 20, 2015)
 
 * Added support for OSX executables

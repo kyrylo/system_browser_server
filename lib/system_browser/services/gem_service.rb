@@ -35,7 +35,7 @@ The Ruby Standard Library is a vast collection of classes and modules that you c
 DESC
           {
             description: desc,
-            behaviours: self.count_behaviours(BehaviourService.stdlib_behaviours),
+            behaviours: self.count_behaviours(self.stdlib_behaviours),
             development_deps: [],
             runtime_deps: []
           }
@@ -61,6 +61,7 @@ DESC
       protected
 
       include SystemBrowser::Helpers::GemServiceHelper
+      include SystemBrowser::Helpers::BehaviourServiceHelper
 
       def count_behaviours(collection)
         behaviours = {}
