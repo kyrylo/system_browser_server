@@ -47,7 +47,7 @@ module SystemBrowser
           gem = if behaviours.include?(behaviour)
                   @other
                 else
-                  Gem.loaded_specs.keys.find do |g|
+                  self.all_gems.keys.find do |g|
                     behaviours = @sn.all_classes_and_modules_in_gem_named(g)
                     behaviours.include?(behaviour)
                   end

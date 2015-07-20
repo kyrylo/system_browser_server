@@ -6,12 +6,12 @@ module SystemBrowser
       DEFAULT_GEMS = [{name: CORE_LABEL}, {name: STDLIB_LABEL}]
 
       def get
-        gems = Gem.loaded_specs.map { |gem| {name: gem.first} }
+        gems = self.all_gems.map { |gem| {name: gem.first} }
         [*DEFAULT_GEMS, *gems]
       end
 
       def description(*args)
-        gem = ::Gem.loaded_specs[@data]
+        gem = self.find_gem(@data)
 
         case @data
         when CORE_LABEL
@@ -49,7 +49,7 @@ DESC
 
       def open
         editor = [ENV['VISUAL'], ENV['EDITOR']].find{|e| !e.nil? && !e.empty? }
-        path = ::Gem.loaded_specs[@data].full_gem_path
+        path = self.find_gem(@data).full_gem_path
 
         command = [*Shellwords.split(editor), path]
 
