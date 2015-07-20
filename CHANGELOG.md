@@ -1,6 +1,10 @@
 System Browser
 ==============
 
+### v0.1.4 (July 21, 2015)
+
+* Added meta information for the gem
+
 ### v0.1.3 (July 20, 2015)
 
 * Fixed stdlib meta information
