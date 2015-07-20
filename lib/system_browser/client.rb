@@ -13,6 +13,8 @@ module SystemBrowser
     # @return [SystemBrowser::Session]
     attr_writer :session
 
+    ClientNotFoundError = Class.new(RuntimeError)
+
     def initialize
       @init_pid = nil
     end
@@ -28,7 +30,12 @@ module SystemBrowser
     # process that can be used to send signals to the client.
     #
     # @return [Integer] the process ID of the client application
+    # @raise [RuntimeError]
     def start
+      unless system("which #{CLIENT_EXECUTABLE} > /dev/null 2>&1")
+        fail ClientNotFoundError, "executable '#{CLIENT_EXECUTABLE}' is not on your $PATH"
+      end
+
       @init_pid = spawn(CLIENT_EXECUTABLE, pgroup: true)
       Process.wait(@init_pid)
 
