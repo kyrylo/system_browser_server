@@ -5,7 +5,10 @@ module SystemBrowser
 
       [:debug, :error, :info].each do |m|
         define_method(m) do |*args, &block|
-          @@logger.__send__(m, *args, &block) if $DEBUG_SB
+          if $DEBUG_SB
+            # Avoid the 'log writing failed due to trap' message in trap contexts.
+            Thread.new { @@logger.__send__(m, *args, &block) }.join
+          end
         end
       end
 

@@ -16,6 +16,8 @@ module SystemBrowser
       @server = server
       @client = client
       [@server, @client].each { |o| o.session = self }
+
+      self.register_sigint_hook
     end
 
     ##
@@ -27,6 +29,13 @@ module SystemBrowser
       Thread.new { @client.start }.join
 
       true
+    end
+
+    def destroy
+      @client.close
+      @server.shutdown
+
+      SLogger.debug('[SESSION] the session was destroyed')
     end
 
     ##
@@ -60,6 +69,14 @@ module SystemBrowser
     # @return [void]
     def initialize_connection
       self.send(Response.new(action: 'init'))
+    end
+
+    def register_sigint_hook
+      Signal.trap(:INT) do
+        SLogger.debug('[SESSION] received Ctrl-C, killing myself softly')
+
+        self.destroy
+      end
     end
   end
 end

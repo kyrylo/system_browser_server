@@ -15,13 +15,13 @@ module SystemBrowser
 
     def initialize
       @init_pid = nil
-
-      self.register_sigint_hook
     end
 
     ##
-    # Spawns a new process in the same process group with the client
-    # application.
+    # Spawns a new process in a new process group. I really wanted to find the
+    # way to spawn the process in the same group. However, when I do that, I
+    # cannot send any signals to the window anymore (the app crashes, because
+    # the ruby process exits).
     #
     # @note +@init_pid+ and +@window_pid+ are two different processes. The
     # client uses +@init_id+ to bootstrap itself and +@window_pid+ is the
@@ -29,7 +29,7 @@ module SystemBrowser
     #
     # @return [Integer] the process ID of the client application
     def start
-      @init_pid = spawn(CLIENT_EXECUTABLE)
+      @init_pid = spawn(CLIENT_EXECUTABLE, pgroup: true)
       Process.wait(@init_pid)
 
       @init_pid
@@ -42,17 +42,15 @@ module SystemBrowser
       @window_pid = window_pid
     end
 
-    protected
+    ##
+    # Destroys the window by sending the SIGINT signal (the window has its own
+    # handlers to destroy itself, so it's not our job). Does not wait for
+    # anything.
+    # @return [void]
+    def close
+      SLogger.debug("[client] interrupting window (#{@window_pid})...")
 
-    def register_sigint_hook
-      Signal.trap(:INT) do
-        # Avoid the 'log writing failed due to trap' message.
-        Thread.new do
-          SLogger.debug("Interrupting client (#{@window_pid})...")
-        end.join
-
-        Process.kill(:INT, @window_pid)
-      end
+      Process.kill(:INT, @window_pid)
     end
   end
 end

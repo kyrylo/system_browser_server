@@ -1,5 +1,9 @@
 module SystemBrowser
   class Request
+    ##
+    # Represents a request that ends connection.
+    FIN = 'FIN'
+
     attr_reader :action, :resource, :scope, :other, :callback_id
 
     def initialize(json)

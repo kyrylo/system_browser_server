@@ -23,6 +23,12 @@ module SystemBrowser
       Thread.exit
     end
 
+    def shutdown
+      SLogger.debug("[server] shutting down the TCP server...")
+
+      @tcpserver.close
+    end
+
     protected
 
     ##
@@ -45,15 +51,22 @@ module SystemBrowser
     def handle_connection(connection)
       loop do
         unless readval = connection.gets
-          SLogger.debug("[server] connection #{connection} interrupted. Shutting down...")
+          SLogger.debug("[server] connection #{connection} interrupted")
 
-          @tcpserver.close
+          shutdown
           break
         end
 
-        SLogger.debug("[server] received a request")
+        if readval == Request::FIN
+          SLogger.debug("[server] received the FIN request")
 
-        self.process_request(Request.new(readval))
+          self.session.destroy
+          break
+        else
+          SLogger.debug("[server] received a request")
+
+          self.process_request(Request.new(readval))
+        end
       end
     end
 
