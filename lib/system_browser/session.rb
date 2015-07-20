@@ -43,6 +43,8 @@ module SystemBrowser
     end
 
     def destroy
+      self.restore_previous_sigint
+
       @client.close
       @server.shutdown
 
@@ -82,6 +84,10 @@ module SystemBrowser
       self.send(Response.new(action: 'init'))
     end
 
+    def restore_previous_sigint
+      Signal.trap(:INT, @previous_sigint_callback)
+    end
+
     def register_sigint_hook
       @previous_sigint_callback = Signal.trap(:INT, '')
 
@@ -91,8 +97,8 @@ module SystemBrowser
         self.destroy
 
         if @previous_sigint_callback.instance_of?(Proc)
+          self.restore_previous_sigint
           @previous_sigint_callback.call
-          Signal.trap(:INT, @previous_sigint_callback)
         end
       end
     end
