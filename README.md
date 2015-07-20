@@ -3,6 +3,7 @@ System Browser
 
 * [Repository](https://github.com/kyrylo/system_browser_server/)
 * [Client][client]
+* [Video demonstration](https://youtu.be/CKDxMBC86zA)
 
 Description
 -----------
