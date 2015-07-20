@@ -48,10 +48,10 @@ module SystemBrowser
       Signal.trap(:INT) do
         # Avoid the 'log writing failed due to trap' message.
         Thread.new do
-          SLogger.debug("Interrupting client (#{self.window_pid})...")
+          SLogger.debug("Interrupting client (#{@window_pid})...")
         end.join
 
-        Process.kill(:INT, self.window_pid)
+        Process.kill(:INT, @window_pid)
       end
     end
   end
