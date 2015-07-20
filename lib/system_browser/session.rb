@@ -3,9 +3,18 @@ module SystemBrowser
   # This class glues {SystemBrowser::Server} and {SystemBrowser::Client}
   # providing the support for interaction between them.
   class Session
+    @@running_session = false
+
     ##
     # Initialises a new session.
     def self.init
+      if @@running_session
+        SLogger.debug("can't init a new session! Kill the old one first")
+        return
+      else
+        @@running_session = true
+      end
+
       self.new(Server.new, Client.new).init
     end
 
