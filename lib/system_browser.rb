@@ -40,8 +40,12 @@ module SystemBrowser
     end
 
     if block
+      SLogger.debug('[browser] Initialising a session, blocking')
+
       Session.init
     else
+      SLogger.debug('[browser] Initialising a session, NOT blocking')
+
       Thread.new { Session.init }
     end
   end
