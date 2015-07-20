@@ -17,6 +17,8 @@ module SystemBrowser
       @client = client
       [@server, @client].each { |o| o.session = self }
 
+      @previous_sigint_callback = nil
+
       self.register_sigint_hook
     end
 
@@ -72,10 +74,17 @@ module SystemBrowser
     end
 
     def register_sigint_hook
+      @previous_sigint_callback = Signal.trap(:INT, '')
+
       Signal.trap(:INT) do
         SLogger.debug('[SESSION] received Ctrl-C, killing myself softly')
 
         self.destroy
+
+        if @previous_sigint_callback.instance_of?(Proc)
+          @previous_sigint_callback.call
+          Signal.trap(:INT, @previous_sigint_callback)
+        end
       end
     end
   end
