@@ -7,7 +7,7 @@ module SystemBrowser
 
     ##
     # The name of the executable of the client application.
-    CLIENT_EXECUTABLE = 'system_browser'
+    CLIENT_NAME = 'system_browser'
 
     ##
     # @return [SystemBrowser::Session]
@@ -32,11 +32,13 @@ module SystemBrowser
     # @return [Integer] the process ID of the client application
     # @raise [RuntimeError]
     def start
-      unless system("which #{CLIENT_EXECUTABLE} > /dev/null 2>&1")
-        fail ClientNotFoundError, "executable '#{CLIENT_EXECUTABLE}' is not on your $PATH"
+      executable = self.client_executable
+
+      unless system("which #{executable} > /dev/null 2>&1")
+        fail ClientNotFoundError, "executable '#{executable}' is not on your $PATH"
       end
 
-      @init_pid = spawn(CLIENT_EXECUTABLE, pgroup: true)
+      @init_pid = spawn(executable, pgroup: true)
       Process.wait(@init_pid)
 
       @init_pid
@@ -58,6 +60,19 @@ module SystemBrowser
       SLogger.debug("[client] interrupting window (#{@window_pid})...")
 
       Process.kill(:INT, @window_pid)
+    end
+
+    protected
+
+    def client_executable
+      case RUBY_PLATFORM
+      when /linux/
+        CLIENT_NAME
+      when /darwin/
+        "/Applications/#{CLIENT_NAME}.app/Contents/MacOS/nwjs"
+      else
+        raise RuntimeError, "unsupported platform #{RUBY_PLATFORM}"
+      end
     end
   end
 end
