@@ -48,6 +48,8 @@ module SystemBrowser
       @client.close
       @server.shutdown
 
+      @@running_session = false
+
       SLogger.debug('[SESSION] the session was destroyed')
     end
 
