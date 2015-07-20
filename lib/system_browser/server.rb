@@ -19,6 +19,8 @@ module SystemBrowser
         self.session.connection = connection
         self.handle_connection(connection)
       end
+    rescue IOError
+      Thread.exit
     end
 
     protected
