@@ -8,7 +8,7 @@ Description
 -----------
 
 System Browser is a Ruby gem that serves as a bridge between a Ruby process
-and [System Browser Client][client]. It allows you to browse Ruby behaviours
+and the [System Browser Client][client]. It allows you to browse Ruby behaviours
 (classes and modules), its methods and the methods' source code.
 
 Examples
@@ -24,7 +24,7 @@ SystemBrowser.start
 
 ### Nonblocking start
 
-By default `SystemBrowser.start` blocks current thread. This is useful if you
+By default `SystemBrowser.start` blocks the current thread. This is useful if you
 launch the browser from a small script. If you start the browser inside a
 complex framework such as Rails, blocking may be unwanted. In this case start
 the browser like this:
@@ -66,6 +66,6 @@ Other Ruby versions were not tested, but in theory Ruby 2.2.x should work fine.
 License
 -------
 
-The project uses Zlib License. See LICENCE.txt file for more information.
+The project uses the Zlib License. See LICENCE.txt file for more information.
 
 [client]: https://github.com/kyrylo/system_browser_client/
