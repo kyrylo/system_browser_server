@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description  = 'Powers System Browser Client, which is a desktop application that displays information about Ruby classes and modules, showing both methods and their source code.'
   s.author       = 'Kyrylo Silin'
   s.email        = 'silin@kyrylo.org'
-  s.homepage     = 'https://github.com/kyrylo/system_browser'
+  s.homepage     = 'https://github.com/kyrylo/system_browser_server'
   s.licenses     = 'Zlib'
 
   s.require_path = 'lib'
